@@ -1,0 +1,43 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Virtual environment — never copy into image
+.venv/
+venv/
+env/
+
+# Secrets — never bake into image
+.env
+*.env.local
+
+# Tests and coverage
+tests/
+.pytest_cache/
+.coverage
+htmlcov/
+*.xml
+
+# Dev tooling
+.mypy_cache/
+.ruff_cache/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Docs
+*.md
+
+# Scripts (not needed in runtime image)
+scripts/

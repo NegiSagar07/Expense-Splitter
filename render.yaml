@@ -1,0 +1,45 @@
+# ==============================================================
+# render.yaml — Render Infrastructure as Code (Blueprint)
+# Expense Splitter Application
+# ==============================================================
+# Deploy to Render via Dashboard → Blueprints → Connect Repository
+# ==============================================================
+
+services:
+  # ── FastAPI Web Service ──────────────────────────────────────
+  - type: web
+    name: expense-splitter-api
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: free
+    region: singapore # or ohio, frankfurt, etc.
+    preDeployCommand: alembic upgrade head
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: expense-splitter-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true # Render automatically generates a secure 256-bit secret key
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: ALLOWED_ORIGINS
+        value: "http://localhost:3007,http://localhost:5173" # Update with live frontend URL after frontend deploy
+      - key: JOIN_REQUEST_EXPIRY_DAYS
+        value: "7"
+      - key: DEBUG
+        value: "false"
+
+databases:
+  # ── Render Managed PostgreSQL Database ───────────────────────
+  - name: expense-splitter-db
+    databaseName: expense_splitter_db
+    user: expense_user
+    plan: free
+    region: singapore
