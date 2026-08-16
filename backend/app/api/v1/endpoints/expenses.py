@@ -27,6 +27,7 @@ from app.schemas.expense import (
     ExpenseShareRead,
     ExpenseUpdate,
     RespondShareRequest,
+    SettleDebtRequest,
 )
 from app.services import balance_service, expense_service
 
@@ -165,3 +166,28 @@ async def get_group_balances(
     ctx: tuple[User, GroupMembership] = Depends(get_active_membership),
 ) -> GroupBalanceResponse:
     return await balance_service.calculate_group_balances(db, group_id=group_id)
+
+
+@router.post(
+    "/groups/{group_id}/settle",
+    response_model=ExpenseRead,
+    status_code=status.HTTP_201_CREATED,
+    summary="Settle debt between two group members",
+)
+async def settle_debt(
+    group_id: uuid.UUID,
+    payload: SettleDebtRequest,
+    db: AsyncSession = Depends(get_db),
+    ctx: tuple[User, GroupMembership] = Depends(get_active_membership),
+) -> ExpenseRead:
+    user, _ = ctx
+    expense = await expense_service.settle_debt(
+        db,
+        group_id=group_id,
+        caller=user,
+        debtor_id=payload.debtor_id,
+        creditor_id=payload.creditor_id,
+        amount=payload.amount,
+    )
+    await db.commit()
+    return expense

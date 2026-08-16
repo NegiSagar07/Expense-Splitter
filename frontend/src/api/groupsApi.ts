@@ -78,4 +78,17 @@ export const groupsApi = {
     const res = await axiosClient.get<GroupBalanceResponse>(`/groups/${groupId}/balances`);
     return res.data;
   },
+
+  settleDebt: async (
+    groupId: string,
+    debtorId: string,
+    creditorId: string,
+    amount: number
+  ): Promise<void> => {
+    await axiosClient.post(`/groups/${groupId}/settle`, {
+      debtor_id: debtorId,
+      creditor_id: creditorId,
+      amount,
+    });
+  },
 };

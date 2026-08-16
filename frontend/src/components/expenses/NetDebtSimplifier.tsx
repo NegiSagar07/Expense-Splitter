@@ -1,23 +1,45 @@
-import React from 'react';
-import { GroupBalanceResponse } from '../../types';
-import { ArrowRight, Sparkles, CheckCircle2, User as UserIcon } from 'lucide-react';
+import React, { useState } from 'react';
+import { GroupBalanceResponse, NetDebt } from '../../types';
+import { groupsApi } from '../../api/groupsApi';
+import { ArrowRight, Sparkles, CheckCircle2, User as UserIcon, Loader2 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useToast } from '../../context/ToastContext';
 
 interface NetDebtSimplifierProps {
+  groupId: string;
   balanceData: GroupBalanceResponse;
+  onDebtSettled: () => void;
 }
 
-export const NetDebtSimplifier: React.FC<NetDebtSimplifierProps> = ({ balanceData }) => {
-  const { success } = useToast();
+export const NetDebtSimplifier: React.FC<NetDebtSimplifierProps> = ({
+  groupId,
+  balanceData,
+  onDebtSettled,
+}) => {
+  const { success, error } = useToast();
+  const [settlingId, setSettlingId] = useState<string | null>(null);
 
-  const handleCelebrateSettle = (debtorName: string, creditorName: string, amount: string) => {
-    confetti({
-      particleCount: 70,
-      spread: 60,
-      origin: { y: 0.7 },
-    });
-    success('Debt Settled!', `${debtorName} paid ₹${amount} to ${creditorName}.`);
+  const handleSettle = async (debt: NetDebt) => {
+    const dName = debt.debtor?.name || 'Member';
+    const cName = debt.creditor?.name || 'Member';
+    const amtNum = parseFloat(debt.amount);
+    const key = `${debt.debtor_id}-${debt.creditor_id}`;
+
+    setSettlingId(key);
+    try {
+      await groupsApi.settleDebt(groupId, debt.debtor_id, debt.creditor_id, amtNum);
+      confetti({
+        particleCount: 80,
+        spread: 70,
+        origin: { y: 0.7 },
+      });
+      success('Debt Settled!', `${dName} paid ₹${amtNum.toFixed(2)} to ${cName}.`);
+      onDebtSettled();
+    } catch (err: any) {
+      error('Settlement Failed', err.response?.data?.detail || 'Could not record settlement.');
+    } finally {
+      setSettlingId(null);
+    }
   };
 
   const { net_debts, user_balances } = balanceData;
@@ -85,10 +107,15 @@ export const NetDebtSimplifier: React.FC<NetDebtSimplifierProps> = ({ balanceDat
                     </span>
 
                     <button
-                      onClick={() => handleCelebrateSettle(dName, cName, amtStr)}
-                      className="px-3 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-semibold text-xs border border-emerald-500/30 transition-all active:scale-95"
+                      onClick={() => handleSettle(debt)}
+                      disabled={settlingId === `${debt.debtor_id}-${debt.creditor_id}`}
+                      className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 disabled:opacity-50 text-emerald-300 font-semibold text-xs border border-emerald-500/30 transition-all active:scale-95 shadow-sm"
                     >
-                      Settle
+                      {settlingId === `${debt.debtor_id}-${debt.creditor_id}` ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <span>Settle Debt</span>
+                      )}
                     </button>
                   </div>
                 </div>

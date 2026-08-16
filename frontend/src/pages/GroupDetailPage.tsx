@@ -48,9 +48,9 @@ export const GroupDetailPage: React.FC = () => {
   const [isJoinReqModalOpen, setIsJoinReqModalOpen] = useState(false);
   const [isAdminReqModalOpen, setIsAdminReqModalOpen] = useState(false);
 
-  const fetchAllData = async () => {
+  const fetchAllData = async (showLoader = false) => {
     if (!groupId) return;
-    setLoading(true);
+    if (showLoader || !group) setLoading(true);
     try {
       const g = await groupsApi.getGroupDetail(groupId);
       setGroup(g);
@@ -82,7 +82,7 @@ export const GroupDetailPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchAllData();
+    fetchAllData(true);
   }, [groupId, includeDeleted]);
 
   const copyGroupId = () => {
@@ -95,7 +95,7 @@ export const GroupDetailPage: React.FC = () => {
     try {
       await expensesApi.respondShare(expenseId, approve);
       success(approve ? 'Share Approved!' : 'Share Rejected!');
-      fetchAllData();
+      fetchAllData(false);
     } catch (err: any) {
       error('Response Failed', err.response?.data?.detail || 'Unexpected error');
     }
@@ -108,7 +108,7 @@ export const GroupDetailPage: React.FC = () => {
     try {
       await expensesApi.deleteExpense(expenseId);
       success('Expense Soft-Deleted!', 'Expense removed from active balances.');
-      fetchAllData();
+      fetchAllData(false);
     } catch (err: any) {
       error('Delete Failed', err.response?.data?.detail || 'Unexpected error');
     }
@@ -119,7 +119,7 @@ export const GroupDetailPage: React.FC = () => {
     try {
       await groupsApi.promoteMember(groupId, targetUserId);
       success('Member Promoted!', 'Target member is now an Admin.');
-      fetchAllData();
+      fetchAllData(false);
     } catch (err: any) {
       error('Promotion Failed', err.response?.data?.detail || 'Unexpected error');
     }
@@ -131,7 +131,7 @@ export const GroupDetailPage: React.FC = () => {
     try {
       await groupsApi.removeMember(groupId, targetUserId);
       success('Member Removed!');
-      fetchAllData();
+      fetchAllData(false);
     } catch (err: any) {
       error('Removal Failed', err.response?.data?.detail || 'Unexpected error');
     }
@@ -349,8 +349,12 @@ export const GroupDetailPage: React.FC = () => {
         )}
 
         {/* TAB 2: NET BALANCES & DEBTS */}
-        {activeTab === 'balances' && balances && (
-          <NetDebtSimplifier balanceData={balances} />
+        {activeTab === 'balances' && balances && groupId && (
+          <NetDebtSimplifier
+            groupId={groupId}
+            balanceData={balances}
+            onDebtSettled={() => fetchAllData(false)}
+          />
         )}
 
         {/* TAB 3: MEMBERS */}
@@ -374,7 +378,7 @@ export const GroupDetailPage: React.FC = () => {
           onClose={() => setIsCreateExpenseOpen(false)}
           groupId={group.id}
           members={group.members}
-          onExpenseCreated={fetchAllData}
+          onExpenseCreated={() => fetchAllData(false)}
         />
       )}
 
@@ -386,13 +390,13 @@ export const GroupDetailPage: React.FC = () => {
           if (!groupId) return;
           await groupsApi.approveJoinRequest(groupId, reqId);
           success('Join Request Approved!');
-          fetchAllData();
+          fetchAllData(false);
         }}
         onReject={async (reqId) => {
           if (!groupId) return;
           await groupsApi.rejectJoinRequest(groupId, reqId);
           success('Join Request Rejected.');
-          fetchAllData();
+          fetchAllData(false);
         }}
       />
 
@@ -404,13 +408,13 @@ export const GroupDetailPage: React.FC = () => {
           if (!groupId) return;
           await groupsApi.approveAdminRequest(groupId, reqId);
           success('Admin Promotion Approved!');
-          fetchAllData();
+          fetchAllData(false);
         }}
         onReject={async (reqId) => {
           if (!groupId) return;
           await groupsApi.rejectAdminRequest(groupId, reqId);
           success('Admin Request Rejected.');
-          fetchAllData();
+          fetchAllData(false);
         }}
       />
     </div>

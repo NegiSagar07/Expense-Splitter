@@ -47,6 +47,14 @@ class RespondShareRequest(BaseModel):
     approve: bool
 
 
+class SettleDebtRequest(BaseModel):
+    """Payload for POST /groups/{group_id}/settle."""
+
+    debtor_id: uuid.UUID
+    creditor_id: uuid.UUID
+    amount: Decimal = Field(..., gt=0, max_digits=12, decimal_places=2)
+
+
 # ---------------------------------------------------------------------------
 # Expense CRUD Payload Schemas
 # ---------------------------------------------------------------------------

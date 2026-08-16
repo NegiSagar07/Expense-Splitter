@@ -376,3 +376,51 @@ async def respond_to_share(
 
     await db.flush()
     return share
+
+
+async def settle_debt(
+    db: AsyncSession,
+    *,
+    group_id: uuid.UUID,
+    caller: User,
+    debtor_id: uuid.UUID,
+    creditor_id: uuid.UUID,
+    amount: Decimal,
+) -> Expense:
+    """
+    Settle a debt between two members in a group.
+    Creates a settlement expense record where debtor pays creditor the amount.
+    Both payer and recipient shares are auto-APPROVED so balances update immediately.
+    """
+    await _validate_participants_active(db, group_id, [debtor_id, creditor_id])
+
+    # Fetch creditor user for description
+    creditor_res = await db.execute(select(User).where(User.id == creditor_id))
+    creditor = creditor_res.scalar_one_or_none()
+    c_name = creditor.name if creditor else "Member"
+
+    # Create settlement expense
+    expense = Expense(
+        group_id=group_id,
+        owner_id=debtor_id,
+        description=f"Settlement: Payment to {c_name}",
+        total_amount=amount,
+        split_type=SplitType.CUSTOM,
+        is_deleted=False,
+        owner_locked=False,
+    )
+    db.add(expense)
+    await db.flush()
+
+    # Create approved share for creditor
+    share = ExpenseShare(
+        expense_id=expense.id,
+        user_id=creditor_id,
+        amount=amount,
+        status=ShareStatus.APPROVED,
+        responded_at=_now(),
+    )
+    db.add(share)
+
+    await db.flush()
+    return await get_expense_by_id(db, expense_id=expense.id)
