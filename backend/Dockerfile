@@ -44,5 +44,5 @@ USER appuser
 # Expose the port (informational; Render overrides via $PORT)
 EXPOSE ${PORT}
 
-# Start command: uvicorn reads $PORT injected by Render
-CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Start command: run Alembic migrations then launch Uvicorn on $PORT
+CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
