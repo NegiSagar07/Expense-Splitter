@@ -1,11 +1,19 @@
 import axios from 'axios';
 
-// Dynamically resolve API URL: VITE_API_URL > Production Render Domain Fallback > Localhost Fallback
+// Dynamically resolve API URL: VITE_API_URL > Production Domain Fallback > Localhost Fallback
 const getApiBaseUrl = (): string => {
   const envUrl = import.meta.env.VITE_API_URL;
   if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
-    return envUrl.trim();
+    let url = envUrl.trim();
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+    if (!url.endsWith('/api/v1')) {
+      url = `${url}/api/v1`;
+    }
+    return url;
   }
+
   // Auto-detect production hostname on Render or other HTTPS hosts
   if (
     typeof window !== 'undefined' &&

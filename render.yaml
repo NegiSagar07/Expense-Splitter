@@ -47,7 +47,10 @@ services:
         destination: /index.html
     envVars:
       - key: VITE_API_URL
-        value: https://expense-splitter-api.onrender.com/api/v1
+        fromService:
+          type: web
+          name: expense-splitter-api
+          property: url
 
 databases:
   # ── Render Managed PostgreSQL Database ───────────────────────
