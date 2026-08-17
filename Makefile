@@ -24,6 +24,7 @@ help:
 	@echo "  make build           Rebuild images"
 	@echo "  make logs            Tail all service logs"
 	@echo "  make logs-backend    Tail backend logs only"
+	@echo "  make logs-frontend   Tail frontend logs only"
 	@echo "  make shell           Open a shell inside the backend container"
 	@echo "  make psql            Open psql inside the db container"
 	@echo ""
@@ -55,6 +56,9 @@ logs:
 
 logs-backend:
 	$(COMPOSE) logs -f backend
+
+logs-frontend:
+	$(COMPOSE) logs -f frontend
 
 shell:
 	$(BACKEND) /bin/sh
