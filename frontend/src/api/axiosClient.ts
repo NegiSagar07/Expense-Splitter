@@ -1,10 +1,27 @@
 import axios from 'axios';
 
-// Dynamically use API URL or default to backend port 8000
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+// Dynamically resolve API URL: VITE_API_URL > Production Render Domain Fallback > Localhost Fallback
+const getApiBaseUrl = (): string => {
+  const envUrl = import.meta.env.VITE_API_URL;
+  if (envUrl && typeof envUrl === 'string' && envUrl.trim() !== '') {
+    return envUrl.trim();
+  }
+  // Auto-detect production hostname on Render or other HTTPS hosts
+  if (
+    typeof window !== 'undefined' &&
+    window.location.hostname !== 'localhost' &&
+    window.location.hostname !== '127.0.0.1'
+  ) {
+    return 'https://expense-splitter-api.onrender.com/api/v1';
+  }
+  return 'http://localhost:8000/api/v1';
+};
+
+const API_BASE_URL = getApiBaseUrl();
 
 export const axiosClient = axios.create({
   baseURL: API_BASE_URL,
+  timeout: 15000, // 15s timeout to prevent hanging UI indefinitely
   headers: {
     'Content-Type': 'application/json',
   },

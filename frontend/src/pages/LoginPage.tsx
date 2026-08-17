@@ -28,7 +28,15 @@ export const LoginPage: React.FC = () => {
       success('Welcome Back!', 'Logged in successfully.');
       navigate('/');
     } catch (err: any) {
-      const msg = err.response?.data?.detail || 'Invalid email or password';
+      console.error('Login error:', err);
+      let msg = 'Invalid email or password';
+      if (err.response?.data?.detail) {
+        msg = err.response.data.detail;
+      } else if (err.code === 'ECONNABORTED' || err.message?.includes('timeout')) {
+        msg = 'Server request timed out. Render backend may be starting up — please try again in 15 seconds.';
+      } else if (err.code === 'ERR_NETWORK' || !err.response) {
+        msg = 'Unable to connect to backend server. Please verify backend service status.';
+      }
       setErrorMessage(msg);
       error('Login Failed', msg);
     } finally {
