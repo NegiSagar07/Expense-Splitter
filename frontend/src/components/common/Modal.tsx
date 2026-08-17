@@ -50,26 +50,26 @@ export const Modal: React.FC<ModalProps> = ({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-slate-950/80 backdrop-blur-md"
+            className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm"
           />
 
           {/* Modal Container */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92, y: 15 }}
+            initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.92, y: 15 }}
+            exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
-            className={`relative w-full ${maxWidthClasses[maxWidth]} glass-modal rounded-2xl p-6 shadow-2xl z-10 my-auto`}
+            className={`relative w-full ${maxWidthClasses[maxWidth]} bg-white border border-slate-200/90 rounded-2xl p-6 shadow-2xl z-10 my-auto`}
           >
             {/* Header */}
             <div className="flex items-start justify-between mb-5">
               <div>
-                <h3 className="text-lg font-bold text-slate-100">{title}</h3>
-                {subtitle && <p className="text-xs text-slate-400 mt-1">{subtitle}</p>}
+                <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+                {subtitle && <p className="text-xs text-slate-500 mt-1">{subtitle}</p>}
               </div>
               <button
                 onClick={onClose}
-                className="text-slate-400 hover:text-slate-200 hover:bg-slate-800/60 rounded-lg p-1.5 transition-colors"
+                className="text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg p-1.5 transition-colors cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>

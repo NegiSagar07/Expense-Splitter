@@ -2,7 +2,7 @@ import React from 'react';
 import { Membership, MemberRole } from '../../types';
 import { RoleBadge } from '../common/Badge';
 import { useAuth } from '../../context/AuthContext';
-import { Crown, Shield, UserMinus, User as UserIcon } from 'lucide-react';
+import { Shield, UserMinus, User as UserIcon, LogOut } from 'lucide-react';
 
 interface MembersListProps {
   members: Membership[];
@@ -25,15 +25,16 @@ export const MembersList: React.FC<MembersListProps> = ({
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
+        <h4 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
           Group Members ({members.length})
         </h4>
 
         <button
           onClick={onLeaveGroup}
-          className="px-3 py-1.5 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-rose-300 font-semibold text-xs border border-rose-500/30 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-semibold text-xs border border-rose-200 transition-colors cursor-pointer"
         >
-          Leave Group
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Leave Group</span>
         </button>
       </div>
 
@@ -48,21 +49,21 @@ export const MembersList: React.FC<MembersListProps> = ({
             isAdminOrSuper &&
             !isMe &&
             !isTargetSuper &&
-            !(isTargetAdmin && myRole !== 'super_admin'); // Admin cannot remove Admin (FR-A3/A4)
+            !(isTargetAdmin && myRole !== 'super_admin');
 
           return (
             <div
               key={mem.id}
-              className="flex items-center justify-between p-3.5 rounded-xl glass-panel bg-slate-900/60 border border-slate-800"
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:border-slate-300 transition-all"
             >
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-200 font-bold text-sm">
-                  {mem.user?.name ? mem.user.name.charAt(0) : <UserIcon className="w-4 h-4" />}
+                <div className="w-10 h-10 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm shadow-2xs">
+                  {mem.user?.name ? mem.user.name.charAt(0).toUpperCase() : <UserIcon className="w-4 h-4" />}
                 </div>
 
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-slate-200">
+                    <span className="text-sm font-bold text-slate-900">
                       {mem.user?.name || 'Member'} {isMe && '(You)'}
                     </span>
                   </div>
@@ -78,7 +79,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                   <button
                     onClick={() => onPromoteMember(mem.user_id)}
                     title="Promote to Admin"
-                    className="p-2 text-slate-400 hover:text-sky-400 hover:bg-slate-800/80 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-colors cursor-pointer"
                   >
                     <Shield className="w-4 h-4" />
                   </button>
@@ -88,7 +89,7 @@ export const MembersList: React.FC<MembersListProps> = ({
                   <button
                     onClick={() => onRemoveMember(mem.user_id)}
                     title="Remove Member"
-                    className="p-2 text-slate-400 hover:text-rose-400 hover:bg-slate-800/80 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition-colors cursor-pointer"
                   >
                     <UserMinus className="w-4 h-4" />
                   </button>

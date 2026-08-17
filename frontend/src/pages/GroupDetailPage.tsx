@@ -22,7 +22,6 @@ import {
   Shield,
   UserPlus,
   Loader2,
-  CheckCircle2,
 } from 'lucide-react';
 
 type TabType = 'expenses' | 'balances' | 'members';
@@ -173,21 +172,21 @@ export const GroupDetailPage: React.FC = () => {
 
   if (loading && !group) {
     return (
-      <div className="min-h-screen bg-[#090d16] flex items-center justify-center">
-        <Loader2 className="w-8 h-8 text-emerald-400 animate-spin" />
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 text-emerald-600 animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#090d16] flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-8">
         {/* Back Link */}
         <Link
           to="/"
-          className="inline-flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-200 transition-colors mb-4"
+          className="inline-flex items-center gap-1.5 text-xs text-slate-500 hover:text-slate-900 transition-colors mb-4 font-semibold"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Dashboard</span>
@@ -195,25 +194,25 @@ export const GroupDetailPage: React.FC = () => {
 
         {/* Group Header Banner */}
         {group && (
-          <div className="glass-panel rounded-3xl p-6 lg:p-8 mb-8 border border-slate-800 relative overflow-hidden">
+          <div className="bg-white rounded-3xl p-6 lg:p-8 mb-8 border border-slate-200 shadow-xs relative overflow-hidden">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
               <div className="flex items-start gap-4">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 flex items-center justify-center text-slate-950 font-extrabold text-2xl shadow-lg shadow-emerald-500/20 shrink-0">
+                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-500 to-emerald-600 flex items-center justify-center text-white font-extrabold text-2xl shadow-md shadow-emerald-500/20 shrink-0">
                   {group.name.charAt(0).toUpperCase()}
                 </div>
 
                 <div>
-                  <h1 className="text-2xl font-extrabold text-slate-100">{group.name}</h1>
+                  <h1 className="text-2xl font-extrabold text-slate-900">{group.name}</h1>
                   <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                     <button
                       onClick={copyGroupId}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700 transition-colors"
+                      className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-mono border border-slate-200 transition-colors cursor-pointer"
                     >
-                      <Copy className="w-3 h-3 text-emerald-400" />
+                      <Copy className="w-3 h-3 text-indigo-600" />
                       <span>ID: {group.id.substring(0, 8)}...</span>
                     </button>
 
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-500">
                       Created by {group.members.find((m) => m.user_id === group.created_by)?.user?.name || 'Owner'}
                     </span>
                   </div>
@@ -224,7 +223,7 @@ export const GroupDetailPage: React.FC = () => {
               <div className="flex items-center gap-3 flex-wrap">
                 <button
                   onClick={() => setIsCreateExpenseOpen(true)}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs shadow-lg shadow-emerald-500/20 transition-all hover:scale-[1.02]"
+                  className="flex items-center gap-2 px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md transition-all hover:scale-[1.02] cursor-pointer"
                 >
                   <PlusCircle className="w-4 h-4" />
                   <span>Log Expense</span>
@@ -236,9 +235,9 @@ export const GroupDetailPage: React.FC = () => {
                     {joinRequests.length > 0 && (
                       <button
                         onClick={() => setIsJoinReqModalOpen(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-500/10 text-amber-300 border border-amber-500/30 text-xs font-semibold"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-amber-50 text-amber-800 border border-amber-200 text-xs font-bold shadow-2xs cursor-pointer"
                       >
-                        <UserPlus className="w-4 h-4" />
+                        <UserPlus className="w-4 h-4 text-amber-600" />
                         <span>Join Requests ({joinRequests.length})</span>
                       </button>
                     )}
@@ -246,9 +245,9 @@ export const GroupDetailPage: React.FC = () => {
                     {adminRequests.length > 0 && (
                       <button
                         onClick={() => setIsAdminReqModalOpen(true)}
-                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-sky-500/10 text-sky-300 border border-sky-500/30 text-xs font-semibold"
+                        className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-50 text-indigo-800 border border-indigo-200 text-xs font-bold shadow-2xs cursor-pointer"
                       >
-                        <Shield className="w-4 h-4" />
+                        <Shield className="w-4 h-4 text-indigo-600" />
                         <span>Admin Requests ({adminRequests.length})</span>
                       </button>
                     )}
@@ -258,13 +257,13 @@ export const GroupDetailPage: React.FC = () => {
             </div>
 
             {/* Tab Navigation */}
-            <div className="flex items-center gap-2 mt-8 pt-6 border-t border-slate-800">
+            <div className="flex items-center gap-2 mt-8 pt-6 border-t border-slate-100">
               <button
                 onClick={() => setActiveTab('expenses')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'expenses'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Receipt className="w-4 h-4" />
@@ -273,10 +272,10 @@ export const GroupDetailPage: React.FC = () => {
 
               <button
                 onClick={() => setActiveTab('balances')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'balances'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Sparkles className="w-4 h-4" />
@@ -285,10 +284,10 @@ export const GroupDetailPage: React.FC = () => {
 
               <button
                 onClick={() => setActiveTab('members')}
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                   activeTab === 'members'
-                    ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/30'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/60'
+                    ? 'bg-emerald-50 text-emerald-800 border border-emerald-200 shadow-2xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
                 }`}
               >
                 <Users className="w-4 h-4" />
@@ -304,31 +303,31 @@ export const GroupDetailPage: React.FC = () => {
         {activeTab === 'expenses' && (
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="text-sm font-bold text-slate-200 uppercase tracking-wider">
+              <h3 className="text-sm font-bold text-slate-800 uppercase tracking-wider">
                 Group Expenses History
               </h3>
 
-              <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer">
+              <label className="flex items-center gap-2 text-xs text-slate-600 font-semibold cursor-pointer">
                 <input
                   type="checkbox"
                   checked={includeDeleted}
                   onChange={(e) => setIncludeDeleted(e.target.checked)}
-                  className="rounded border-slate-700 bg-slate-900 text-emerald-500 focus:ring-0"
+                  className="rounded border-slate-300 text-emerald-600 focus:ring-emerald-500"
                 />
                 <span>Include Soft-Deleted</span>
               </label>
             </div>
 
             {expenses.length === 0 ? (
-              <div className="glass-panel rounded-3xl p-12 text-center border border-slate-800">
-                <Receipt className="w-10 h-10 text-slate-500 mx-auto mb-3" />
-                <h4 className="text-base font-bold text-slate-200 mb-1">No Expenses Logged Yet</h4>
-                <p className="text-xs text-slate-400 mb-4">
+              <div className="bg-white rounded-3xl p-12 text-center border border-slate-200 shadow-xs">
+                <Receipt className="w-10 h-10 text-slate-400 mx-auto mb-3" />
+                <h4 className="text-base font-bold text-slate-900 mb-1">No Expenses Logged Yet</h4>
+                <p className="text-xs text-slate-500 mb-4">
                   Log your first group expense to start splitting equal or custom shares.
                 </p>
                 <button
                   onClick={() => setIsCreateExpenseOpen(true)}
-                  className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs"
+                  className="px-4.5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-md cursor-pointer"
                 >
                   Log First Expense
                 </button>
@@ -359,7 +358,7 @@ export const GroupDetailPage: React.FC = () => {
 
         {/* TAB 3: MEMBERS */}
         {activeTab === 'members' && group && (
-          <div className="glass-panel rounded-3xl p-6 border border-slate-800">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200 shadow-xs">
             <MembersList
               members={group.members}
               myRole={myRole}

@@ -117,7 +117,7 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
         {/* Description & Amount */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div className="sm:col-span-2">
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
               Description
             </label>
             <input
@@ -126,12 +126,12 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
               placeholder="e.g. Dinner, Fuel, Grocery"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-emerald-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1">
+            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1">
               Total Amount (₹)
             </label>
             <input
@@ -142,46 +142,46 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
               placeholder="0.00"
               value={totalAmount}
               onChange={(e) => setTotalAmount(e.target.value)}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900/80 border border-slate-700 text-slate-100 font-mono-amount font-bold text-sm focus:outline-none focus:border-emerald-500"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 font-mono-amount font-bold text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20"
             />
           </div>
         </div>
 
         {/* Split Type Selector */}
         <div>
-          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+          <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
             Split Strategy
           </label>
           <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => setSplitType('equal')}
-              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer ${
                 splitType === 'equal'
-                  ? 'bg-emerald-500/10 border-emerald-500 text-emerald-300'
-                  : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                  ? 'bg-emerald-50 border-emerald-500 text-emerald-900 shadow-2xs'
+                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Users className="w-5 h-5 shrink-0" />
+              <Users className={`w-5 h-5 shrink-0 ${splitType === 'equal' ? 'text-emerald-600' : 'text-slate-400'}`} />
               <div>
-                <span className="block text-xs font-bold text-slate-100">Equal Split</span>
-                <span className="block text-[11px] text-slate-400">Divide total evenly</span>
+                <span className="block text-xs font-bold text-slate-900">Equal Split</span>
+                <span className="block text-[11px] text-slate-500">Divide total evenly</span>
               </div>
             </button>
 
             <button
               type="button"
               onClick={() => setSplitType('custom')}
-              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all ${
+              className={`flex items-center gap-3 p-3 rounded-xl border text-left transition-all cursor-pointer ${
                 splitType === 'custom'
-                  ? 'bg-emerald-500/10 border-emerald-500 text-emerald-300'
-                  : 'bg-slate-900/60 border-slate-800 text-slate-400 hover:border-slate-700'
+                  ? 'bg-indigo-50 border-indigo-500 text-indigo-900 shadow-2xs'
+                  : 'bg-slate-50 border-slate-200 text-slate-600 hover:border-slate-300'
               }`}
             >
-              <Calculator className="w-5 h-5 shrink-0" />
+              <Calculator className={`w-5 h-5 shrink-0 ${splitType === 'custom' ? 'text-indigo-600' : 'text-slate-400'}`} />
               <div>
-                <span className="block text-xs font-bold text-slate-100">Custom Split</span>
-                <span className="block text-[11px] text-slate-400">Specific per-person share</span>
+                <span className="block text-xs font-bold text-slate-900">Custom Split</span>
+                <span className="block text-[11px] text-slate-500">Specific per-person share</span>
               </div>
             </button>
           </div>
@@ -191,11 +191,11 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
         {splitType === 'equal' && (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                 Included Members ({selectedUserIds.length})
               </label>
               {parsedTotal > 0 && (
-                <span className="text-xs text-emerald-400 font-mono-amount font-semibold">
+                <span className="text-xs text-emerald-700 font-mono-amount font-bold">
                   ~ ₹{equalPerPerson} / person
                 </span>
               )}
@@ -209,14 +209,14 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
                     key={m.user_id}
                     type="button"
                     onClick={() => toggleUser(m.user_id)}
-                    className={`flex items-center justify-between p-2.5 rounded-xl text-xs border transition-all ${
+                    className={`flex items-center justify-between p-2.5 rounded-xl text-xs border transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-slate-800 border-emerald-500/60 text-slate-100'
-                        : 'bg-slate-900/40 border-slate-800/80 text-slate-500'
+                        ? 'bg-emerald-50/80 border-emerald-500 text-emerald-950 font-bold'
+                        : 'bg-slate-50 border-slate-200 text-slate-500'
                     }`}
                   >
                     <span className="truncate">{m.user?.name || 'Member'}</span>
-                    {isSelected && <Check className="w-3.5 h-3.5 text-emerald-400 shrink-0" />}
+                    {isSelected && <Check className="w-3.5 h-3.5 text-emerald-600 shrink-0" />}
                   </button>
                 );
               })}
@@ -228,14 +228,14 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
         {splitType === 'custom' && (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <label className="block text-xs font-semibold uppercase tracking-wider text-slate-300">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700">
                 Custom Amount Per Member
               </label>
               <span
-                className={`text-xs font-mono-amount font-semibold ${
+                className={`text-xs font-mono-amount font-bold ${
                   Math.abs(customTotalSum - parsedTotal) < 0.01
-                    ? 'text-emerald-400'
-                    : 'text-amber-400'
+                    ? 'text-emerald-700'
+                    : 'text-rose-600'
                 }`}
               >
                 Sum: ₹{customTotalSum.toFixed(2)} / ₹{parsedTotal.toFixed(2)}
@@ -246,9 +246,9 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
               {members.map((m) => (
                 <div
                   key={m.user_id}
-                  className="flex items-center justify-between gap-3 p-2 rounded-xl bg-slate-900/60 border border-slate-800"
+                  className="flex items-center justify-between gap-3 p-2 rounded-xl bg-slate-50 border border-slate-200"
                 >
-                  <span className="text-xs font-medium text-slate-200 truncate">
+                  <span className="text-xs font-semibold text-slate-900 truncate">
                     {m.user?.name || 'Member'}
                   </span>
 
@@ -258,7 +258,7 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
                     placeholder="0.00"
                     value={customShares[m.user_id] || ''}
                     onChange={(e) => handleCustomShareChange(m.user_id, e.target.value)}
-                    className="w-28 px-2.5 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs font-mono-amount text-slate-100 focus:outline-none focus:border-emerald-500"
+                    className="w-28 px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-mono-amount text-slate-900 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               ))}
@@ -267,11 +267,11 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
         )}
 
         {/* Modal Actions */}
-        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-100">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-medium text-slate-400 hover:text-slate-200 hover:bg-slate-800"
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
           >
             Cancel
           </button>
@@ -279,7 +279,7 @@ export const CreateExpenseModal: React.FC<CreateExpenseModalProps> = ({
           <button
             type="submit"
             disabled={loading || parsedTotal <= 0 || !description.trim()}
-            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 disabled:opacity-50 text-slate-950 font-bold text-xs shadow-md shadow-emerald-500/20"
+            className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 text-white font-bold text-xs shadow-md hover:shadow-lg cursor-pointer"
           >
             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Receipt className="w-4 h-4" />}
             <span>Log Expense</span>

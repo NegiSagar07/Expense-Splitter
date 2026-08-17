@@ -26,23 +26,23 @@ export const JoinRequestsModal: React.FC<JoinRequestsModalProps> = ({
       subtitle="Approve or reject users requesting to join this group."
     >
       {requests.length === 0 ? (
-        <p className="text-sm text-slate-400 text-center py-6">No pending join requests.</p>
+        <p className="text-sm text-slate-500 text-center py-6">No pending join requests.</p>
       ) : (
         <div className="space-y-3 max-h-72 overflow-y-auto pr-1">
           {requests.map((req) => (
             <div
               key={req.id}
-              className="flex items-center justify-between p-3 rounded-xl bg-slate-900/60 border border-slate-800"
+              className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-200"
             >
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-slate-800 flex items-center justify-center text-slate-300 font-bold text-xs">
-                  {req.user?.name ? req.user.name.charAt(0) : <UserIcon className="w-3.5 h-3.5" />}
+                <div className="w-8 h-8 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-xs">
+                  {req.user?.name ? req.user.name.charAt(0).toUpperCase() : <UserIcon className="w-3.5 h-3.5" />}
                 </div>
                 <div>
-                  <span className="block text-xs font-bold text-slate-200">
+                  <span className="block text-xs font-bold text-slate-900">
                     {req.user?.name || req.user_id.substring(0, 8)}
                   </span>
-                  <span className="block text-[10px] text-slate-400">
+                  <span className="block text-[10px] text-slate-500">
                     Requested {new Date(req.requested_at).toLocaleDateString()}
                   </span>
                 </div>
@@ -51,14 +51,14 @@ export const JoinRequestsModal: React.FC<JoinRequestsModalProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={() => onApprove(req.id)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-xs"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-2xs transition-colors cursor-pointer"
                 >
                   <Check className="w-3.5 h-3.5" /> Approve
                 </button>
 
                 <button
                   onClick={() => onReject(req.id)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-rose-300 font-medium text-xs border border-slate-700"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 text-rose-600 font-semibold text-xs border border-slate-200 transition-colors cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" /> Reject
                 </button>
