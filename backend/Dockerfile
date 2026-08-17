@@ -44,5 +44,5 @@ USER appuser
 # Expose the port (informational; Render overrides via $PORT)
 EXPOSE ${PORT}
 
-# Start command: run Alembic migrations then launch Uvicorn on $PORT
-CMD ["sh", "-c", "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
+# Start command: wait for DB, run Alembic migrations, then launch Uvicorn on $PORT
+CMD ["sh", "-c", "until alembic upgrade head; do echo 'Waiting for database...'; sleep 2; done && uvicorn app.main:app --host 0.0.0.0 --port ${PORT}"]
