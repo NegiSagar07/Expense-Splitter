@@ -13,7 +13,7 @@ services:
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
     plan: free
-    region: singapore # or ohio, frankfurt, etc.
+    region: singapore
     preDeployCommand: alembic upgrade head
     healthCheckPath: /api/v1/health
     envVars:
@@ -22,19 +22,33 @@ services:
           name: expense-splitter-db
           property: connectionString
       - key: SECRET_KEY
-        generateValue: true # Render automatically generates a secure 256-bit secret key
+        generateValue: true
       - key: ALGORITHM
         value: HS256
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
-        value: "30"
+        value: "10080"
       - key: REFRESH_TOKEN_EXPIRE_DAYS
         value: "7"
       - key: ALLOWED_ORIGINS
-        value: "http://localhost:3007,http://localhost:5173" # Update with live frontend URL after frontend deploy
+        value: "http://localhost:3007,https://expense-splitter-web.onrender.com"
       - key: JOIN_REQUEST_EXPIRY_DAYS
         value: "7"
       - key: DEBUG
         value: "false"
+
+  # ── React / Vite Frontend Static Site ────────────────────────
+  - type: web
+    name: expense-splitter-web
+    runtime: static
+    buildCommand: cd frontend && npm ci && npm run build
+    staticPublishPath: ./frontend/dist
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_URL
+        value: https://expense-splitter-api.onrender.com/api/v1
 
 databases:
   # ── Render Managed PostgreSQL Database ───────────────────────
