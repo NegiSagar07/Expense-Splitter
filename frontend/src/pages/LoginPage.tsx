@@ -3,12 +3,13 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../api/authApi';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { Wallet, Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
+import { Wallet, Sparkles, ArrowRight, ShieldCheck, Zap, AlertCircle, UserPlus } from 'lucide-react';
 
 export const LoginPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const { login } = useAuth();
   const { success, error } = useToast();
@@ -19,6 +20,7 @@ export const LoginPage: React.FC = () => {
     if (!email || !password) return;
 
     setLoading(true);
+    setErrorMessage(null);
 
     try {
       const res = await authApi.login(email.trim(), password);
@@ -26,7 +28,9 @@ export const LoginPage: React.FC = () => {
       success('Welcome Back!', 'Logged in successfully.');
       navigate('/');
     } catch (err: any) {
-      error('Login Failed', err.response?.data?.detail || 'Invalid email or password');
+      const msg = err.response?.data?.detail || 'Invalid email or password';
+      setErrorMessage(msg);
+      error('Login Failed', msg);
     } finally {
       setLoading(false);
     }
@@ -35,11 +39,12 @@ export const LoginPage: React.FC = () => {
   const fillDemoAccount = (demoEmail: string) => {
     setEmail(demoEmail);
     setPassword('password123');
+    setErrorMessage(null);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4 sm:p-6 lg:p-8 relative overflow-hidden">
-      {/* Subtle ambient light gradient graphics */}
+      {/* Ambient gradient graphics */}
       <div className="absolute top-10 left-10 w-96 h-96 bg-emerald-200/40 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-10 right-10 w-96 h-96 bg-indigo-200/40 rounded-full blur-3xl pointer-events-none" />
 
@@ -126,6 +131,29 @@ export const LoginPage: React.FC = () => {
             </p>
           </div>
 
+          {/* Prominent Error Banner */}
+          {errorMessage && (
+            <div className="mb-5 p-4 rounded-2xl bg-rose-50 border border-rose-200 text-rose-900 text-xs font-medium space-y-2.5 shadow-2xs">
+              <div className="flex items-start gap-2.5">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
+                <span className="leading-relaxed font-semibold">{errorMessage}</span>
+              </div>
+              
+              {errorMessage.toLowerCase().includes('account') && (
+                <div className="pt-2 border-t border-rose-200/80 flex items-center justify-between">
+                  <span className="text-[11px] text-rose-700 font-normal">Need an account?</span>
+                  <Link
+                    to="/register"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs transition-colors cursor-pointer"
+                  >
+                    <UserPlus className="w-3.5 h-3.5" />
+                    <span>Create Account</span>
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
+
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
               <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
@@ -136,7 +164,10 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="alice@example.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>
@@ -150,7 +181,10 @@ export const LoginPage: React.FC = () => {
                 required
                 placeholder="••••••••"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  if (errorMessage) setErrorMessage(null);
+                }}
                 className="w-full px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 text-sm focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 transition-all"
               />
             </div>

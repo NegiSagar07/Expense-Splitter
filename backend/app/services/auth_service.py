@@ -56,7 +56,9 @@ async def authenticate_user(
     result = await db.execute(select(User).where(User.email == email))
     user = result.scalar_one_or_none()
 
-    if user is None or not verify_password(password, user.password_hash):
-        raise ValueError("Invalid email or password.")
+    if user is None:
+        raise ValueError("No account found with this email. Please create an account first.")
+    if not verify_password(password, user.password_hash):
+        raise ValueError("Incorrect password. Please try again.")
 
     return create_access_token(subject=str(user.id))
