@@ -11,7 +11,7 @@ services:
     name: expense-splitter-api
     runtime: docker
     dockerfilePath: ./backend/Dockerfile
-    dockerContext: ./backend
+    dockerContext: .
     plan: free
     region: singapore
     healthCheckPath: /api/v1/health
